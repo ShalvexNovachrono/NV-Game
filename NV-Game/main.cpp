@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int RandomInt(int MIN, int MAX) {
+int RandomInt(int MIN, int MAX) { // Gives random number based on requirements
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(MIN, MAX);
@@ -31,28 +31,28 @@ void GetDesktopResolution()
 }
 
 vector<int> SmoothPointAtoB(int StartPoint, int EndPoint) {
-    vector<int> Smoothed = {};
+    vector<int> Smoothed = {}; // Creates an empty vector array
     
-    int CheckDir = StartPoint - EndPoint;
+    int CheckDir = StartPoint - EndPoint; // Calculates the difference
     bool IsNeg = false;
 
-    int CheckDirAbs = abs(CheckDir);
+    int CheckDirAbs = abs(CheckDir); // Makes it positive
 
-    if (CheckDir < 0) {
+    if (CheckDir < 0) { // Checks if "CheckDir" is less than 0
         IsNeg = true;
     } 
 
-    for (int i = 0; i <= CheckDirAbs; i++) {
+    for (int i = 0; i <= CheckDirAbs; i++) { // 
         if (StartPoint == EndPoint) {
-            break;
+            break; // Breaks the loop if it reached the goal
         } else {
-            if (IsNeg) {
+            if (IsNeg) { // Adds one if its true
                 StartPoint += 1;
             }
             else {
                 StartPoint -= 1;
             }
-            Smoothed.push_back(StartPoint);
+            Smoothed.push_back(StartPoint); // Add it to a slot
         }
 
     }
@@ -61,17 +61,17 @@ vector<int> SmoothPointAtoB(int StartPoint, int EndPoint) {
 }
 
 
-HDC Screen = GetDC(NULL);
+HDC Screen = GetDC(NULL); // Created a window?
 bool MainLoop() {
 
-    int x = 1;
+    int x = 1; //This will be used for moveing the rectangle
     int y = 1;
 
-    int LastR = RandomInt(0, 255);
+    int LastR = RandomInt(0, 255); // Gets a random number from 0 to 255. 0 = black, 255 = white 
     int LastG = RandomInt(0, 255);
     int LastB = RandomInt(0, 255);
-    HBRUSH redColourBrush = CreateSolidBrush(RGB(LastR, LastR, LastR));
-    SelectObject(Screen, redColourBrush);
+    HBRUSH ColourBrush = CreateSolidBrush(RGB(LastR, LastR, LastR)); // Creates Brush with random colour
+    SelectObject(Screen, ColourBrush); // Puts the colour on the screen that was created.
 
     int R, G, B;
     while (true) {
@@ -80,18 +80,21 @@ bool MainLoop() {
         G = RandomInt(0, 255);
         B = RandomInt(0, 255);
 
-        vector<int> SmoothR = SmoothPointAtoB(LastR, R);
+        vector<int> SmoothR = SmoothPointAtoB(LastR, R);  // Gets a list of numbers between point a to b
         vector<int> SmoothG = SmoothPointAtoB(LastG, G);
         vector<int> SmoothB = SmoothPointAtoB(LastB, B);
 
-        int LoopLimit = SmoothR.size();
+        // The code from here 
+        int LoopLimit = SmoothR.size(); 
         LoopLimit = (LoopLimit < SmoothG.size()) ? SmoothG.size() : LoopLimit;
         LoopLimit = (LoopLimit < SmoothB.size()) ? SmoothB.size() : LoopLimit;
+        // to here which will get the biggest array size for a loop
+
         for (int i = 0; i < LoopLimit; i++) {
-            int LR = SmoothR[(i < SmoothR.size()) ? i : SmoothR.size() - 1];
+            int LR = SmoothR[(i < SmoothR.size()) ? i : SmoothR.size() - 1]; // Checks if "i" less than Size of the "SmoothR", if its true then it  will give "i" if its not it will give the last element index from array "SmoothR"
             int LG = SmoothG[(i < SmoothG.size()) ? i : SmoothG.size() - 1];
             int LB = SmoothB[(i < SmoothB.size()) ? i : SmoothB.size() - 1];
-            redColourBrush = CreateSolidBrush(RGB(LR, LG, LB));
+            ColourBrush = CreateSolidBrush(RGB(LR, LG, LB)); // Creates the brush again
             if (IsThisKeyPressed('A')) {
                 if (x > 0) x -= 1; // Decrease x if it's greater than 0
             }
@@ -104,14 +107,14 @@ bool MainLoop() {
             if (IsThisKeyPressed('S')) {
                 if (y < WINDOW_HEIGHT) y += 1; // Increase y if it's less than 4
             }
-            SelectObject(Screen, redColourBrush);
-            Rectangle(Screen, 50 + x, 50 + y, 500 + x, 500 + y);
+            SelectObject(Screen, ColourBrush); 
+            Rectangle(Screen, 50 + x, 50 + y, 500 + x, 500 + y); // creates a rectangle and adds the position it needs to be
         }
-        LastR = R;
+        LastR = R; //Last colour changes to current colour
         LastG = G;
         LastB = B; 
-        DeleteObject(redColourBrush); // Before creating a new brush
-        Sleep(10);
+        DeleteObject(ColourBrush); // Before creating a new brush
+        Sleep(10); 
     }
     return true;
 }
