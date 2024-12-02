@@ -108,7 +108,7 @@ bool MainLoop() {
                 if (y < WINDOW_HEIGHT) y += 1; // Increase y if it's less than 4
             }
             SelectObject(Screen, ColourBrush); 
-            Rectangle(Screen, 50 + x, 50 + y, 500 + x, 500 + y); // creates a rectangle and adds the position it needs to be
+            Rectangle(Screen, x, y, 450 + x, 450 + y); // creates a rectangle and adds the position it needs to be
         }
         LastR = R; //Last colour changes to current colour
         LastG = G;
